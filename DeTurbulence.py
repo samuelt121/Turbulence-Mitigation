@@ -42,7 +42,7 @@ def main():
 
     ## define Flags
     readVideo = 1  # flag indicating whether video is read or a sequence of images is loaded.
-    ReferenceInitializationOpt = 3 # 3 options: 1. via Lucky region for N_firstRef frames, 2. mean of N_firstRef frames 3. first frame.
+    ReferenceInitializationOpt = 2 # 3 options: 1. via Lucky region for N_firstRef frames, 2. mean of N_firstRef frames 3. first frame.
 
     # region Load sequence of images (video) - output: ImagesSequence
     dirPath = os.path.dirname(os.path.abspath(__file__))
@@ -50,7 +50,7 @@ def main():
     # images_directory = dirPath + "\\Data\\02.09.2020_500m_Car1_betterFocus_2"
     images_directory = dirPath + "\\Data\\images_saved_01_06_250m\\"
     video_path = dirPath + "\\Data\\test_turbulence.mp4"
-    video_path = dirPath + "\\Data\\Trucks.mp4"
+    #video_path = dirPath + "\\Data\\Trucks.mp4"
 
     #display2Videos(video_path, dirPath + "\\testVideo_mean+OF+WienerDeconv.avi")
 
@@ -65,14 +65,14 @@ def main():
     # region Define ROI
 
     # resize image for ROI choosing so it will fit in screen.
-    roi = selectROI(ImagesSequence[0], resize_factor=2)
+    #roi = selectROI(ImagesSequence[0], resize_factor=2)
 
     roi_plate_250 = (1092, 830, 564, 228)
     roi_test = (310, 279, 200, 128)
     #roi_FULLvid = (0, 0, ImagesSequence[0].shape[1], ImagesSequence[0].shape[0])
 
     if readVideo:
-        ROI_coord = roi
+        ROI_coord = roi_test
     else:
         ROI_coord = roi_plate_250 # roi[0] - column, roi[1] - rows. will be inverted for convenience.
 
@@ -203,10 +203,10 @@ def main():
         print('Frame analysis time: ', time.time() - t)
 
     # save loaded video with ROI enhanced.
-    SaveVideoFromFrames(enhancedFrames, 25.0, 'ResultTractor.avi')
+    #SaveVideoFromFrames(enhancedFrames, 25.0, 'test_video.avi')
     # save ROIs' difference video (close look).
     concatenatedVid = [np.hstack((ROI_arr[i], np.zeros((ROI_arr[0].shape[0], 10)), ROI_enhanced_arr[i])).astype(np.float32) for i in range(len(ROI_arr))]
-    SaveVideoFromFrames(concatenatedVid, 25.0, 'Comparison_250m.avi')
+    SaveVideoFromFrames(concatenatedVid, 25.0, 'Comparison_testVideoWiener_MeanRef.avi')
 
     # allowing multiprocessing
 if __name__ == "__main__":
